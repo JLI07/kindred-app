@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kindred - Connecting Generations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+        .nav-btn { transition: all 0.2s; }
+        .nav-btn:hover { background-color: #f3f4f6; }
+        .nav-btn.active { background-color: #2563eb; color: white; }
+        .card { transition: box-shadow 0.2s; }
+        .card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+    <div id="app" class="min-h-screen bg-gray-50">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg border-b">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-3">
+                        <svg width="32" height="32" viewBox="0 0 100 100" class="w-8 h-8">
+                            <defs>
+                                <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Larger figure (grandparent) -->
+                            <circle cx="35" cy="25" r="12" fill="url(#heartGradient)" />
+                            <path d="M 20 35 Q 20 30 25 30 L 45 30 Q 50 30 50 35 L 50 65 Q 50 75 35 75 Q 20 75 20 65 Z" fill="url(#heartGradient)" />
+                            <!-- Smaller figure (grandchild) -->
+                            <circle cx="58" cy="30" r="8" fill="#1e40af" />
+                            <path d="M 48 38 Q 48 35 50 35 L 66 35 Q 68 35 68 38 L 68 60 Q 68 65 58 65 Q 48 65 48 60 Z" fill="#1e40af" />
+                            <!-- Heart shape overlay -->
+                            <path d="M 50 75 Q 35 60 25 45 Q 20 35 30 35 Q 40 35 50 50 Q 60 35 70 35 Q 80 35 75 45 Q 65 60 50 75 Z" fill="url(#heartGradient)" opacity="0.8" />
+                        </svg>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Kindred</h1>
+                            <p class="text-xs text-gray-500 -mt-1">Connecting generations</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-1">
+                        <button onclick="showSection('profiles')" class="nav-btn flex items-center px-4 py-3 rounded-lg text-gray-600" id="btn-profiles">
+                            <span class="mr-2">👤</span>
+                            <span class="hidden sm:inline">Profiles</span>
+                        </button>
+                        <button onclick="showSection('planner')" class="nav-btn flex items-center px-4 py-3 rounded-lg text-gray-600" id="btn-planner">
+                            <span class="mr-2">📅</span>
+                            <span class="hidden sm:inline">Planner</span>
+                        </button>
+                        <button onclick="showSection('ideas')" class="nav-btn flex items-center px-4 py-3 rounded-lg text-gray-600" id="btn-ideas">
+                            <span class="mr-2">💡</span>
+                            <span class="hidden sm:inline">Ideas</span>
+                        </button>
+                        <button onclick="showSection('journal')" class="nav-btn flex items-center px-4 py-3 rounded-lg text-gray-600" id="btn-journal">
+                            <span class="mr-2">📖</span>
+                            <span class="hidden sm:inline">Journal</span>
+                        </button>
+                        <button onclick="showSection('reminders')" class="nav-btn flex items-center px-4 py-3 rounded-lg text-gray-600" id="btn-reminders">
+                            <span class="mr-2">🔔</span>
+                            <span class="hidden sm:inline">Reminders</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 py-8">
+            
+            <!-- Profiles Section -->
+            <div id="section-profiles" class="section active">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Grandchildren Profiles</h2>
+                    <button class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center text-lg">
+                        <span class="mr-2">➕</span>
+                        Add Grandchild
+                    </button>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Emma's Profile -->
+                    <div class="card bg-white rounded-lg shadow-md p-6 cursor-pointer">
+                        <div class="flex items-center mb-4">
+                            <div class="text-4xl mr-4">👧</div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Emma</h3>
+                                <p class="text-gray-600">Age 16</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p><strong>School:</strong> Lincoln High School</p>
+                            <p><strong>Interests:</strong> Photography, Basketball, Music</p>
+                            <p><strong>Last Contact:</strong> May 28, 2025</p>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">Instagram</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">Snapchat</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">TikTok</span>
+                        </div>
+                    </div>
+
+                    <!-- Jake's Profile -->
+                    <div class="card bg-white rounded-lg shadow-md p-6 cursor-pointer">
+                        <div class="flex items-center mb-4">
+                            <div class="text-4xl mr-4">👦</div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Jake</h3>
+                                <p class="text-gray-600">Age 12</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p><strong>School:</strong> Roosevelt Middle School</p>
+                            <p><strong>Interests:</strong> Gaming, Soccer, Drawing</p>
+                            <p><strong>Last Contact:</strong> May 30, 2025</p>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">Discord</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">YouTube</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">Instagram</span>
+                        </div>
+                    </div>
+
+                    <!-- Sophie's Profile -->
+                    <div class="card bg-white rounded-lg shadow-md p-6 cursor-pointer">
+                        <div class="flex items-center mb-4">
+                            <div class="text-4xl mr-4">👶</div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Sophie</h3>
+                                <p class="text-gray-600">Age 7</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p><strong>School:</strong> Sunny Elementary</p>
+                            <p><strong>Interests:</strong> Drawing, Animals, Dancing</p>
+                            <p><strong>Last Contact:</strong> May 29, 2025</p>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">Kids Messenger</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">FaceTime</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ideas Hub Section -->
+            <div id="section-ideas" class="section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Ideas Hub</h2>
+                
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <!-- Conversation Starters -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Conversation Starters</h3>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Age Group:</label>
+                            <select id="ageSelect" onchange="updateConversationStarters()" class="w-full p-3 border rounded-lg text-lg">
+                                <option value="5-8">5-8 years</option>
+                                <option value="9-12">9-12 years</option>
+                                <option value="12-15">12-15 years</option>
+                                <option value="16-18">16-18 years</option>
+                            </select>
+                        </div>
+                        <div id="conversationStarters" class="space-y-3">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Suggestions -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Activity Suggestions</h3>
+                        <div id="activitySuggestions" class="space-y-4">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planner Section -->
+            <div id="section-planner" class="section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Connection Planner</h2>
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Schedule Connections</h3>
+                        <input type="date" class="w-full p-3 border rounded-lg mb-4 text-lg" id="dateInput">
+                        <div class="space-y-4">
+                            <div class="border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <span class="text-2xl mr-3">👧</span>
+                                        <span class="font-semibold">Emma</span>
+                                    </div>
+                                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Schedule</button>
+                                </div>
+                                <div class="text-sm text-gray-600">Last contact: May 28, 2025</div>
+                            </div>
+                            <div class="border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <span class="text-2xl mr-3">👦</span>
+                                        <span class="font-semibold">Jake</span>
+                                    </div>
+                                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Schedule</button>
+                                </div>
+                                <div class="text-sm text-gray-600">Last contact: May 30, 2025</div>
+                            </div>
+                            <div class="border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <span class="text-2xl mr-3">👶</span>
+                                        <span class="font-semibold">Sophie</span>
+                                    </div>
+                                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Schedule</button>
+                                </div>
+                                <div class="text-sm text-gray-600">Last contact: May 29, 2025</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Connection Goals</h3>
+                        <div class="space-y-4">
+                            <div class="border rounded-lg p-4">
+                                <h4 class="font-semibold text-green-700">Weekly Goal</h4>
+                                <p class="text-2xl font-bold text-green-600">3/4</p>
+                                <p class="text-sm text-gray-600">connections this week</p>
+                            </div>
+                            <div class="border rounded-lg p-4">
+                                <h4 class="font-semibold text-blue-700">Monthly Goal</h4>
+                                <p class="text-2xl font-bold text-blue-600">8/12</p>
+                                <p class="text-sm text-gray-600">connections this month</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journal Section -->
+            <div id="section-journal" class="section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Connection Journal</h2>
+                    <button class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 flex items-center text-lg">
+                        <span class="mr-2">➕</span>
+                        Add Entry
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">👧</span>
+                                <div>
+                                    <h3 class="font-semibold text-lg">Chat about Photography</h3>
+                                    <p class="text-gray-600">Emma • May 28, 2025</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-500 hover:text-gray-700">✏️</button>
+                                <button class="text-red-500 hover:text-red-700">🗑️</button>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 bg-gray-50 p-4 rounded">Emma showed me her latest photos from the school art show. She's really improving! We talked about different photography techniques and she's excited to try portrait photography next.</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">👦</span>
+                                <div>
+                                    <h3 class="font-semibold text-lg">Soccer Game Discussion</h3>
+                                    <p class="text-gray-600">Jake • May 30, 2025</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-500 hover:text-gray-700">✏️</button>
+                                <button class="text-red-500 hover:text-red-700">🗑️</button>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 bg-gray-50 p-4 rounded">Jake told me all about his team's winning goal last weekend. He scored an assist and was so proud! We planned to practice some passing drills together next visit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reminders Section -->
+            <div id="section-reminders" class="section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Smart Reminders</h2>
+                
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Upcoming Reminders</h3>
+                        <div class="space-y-4">
+                            <div class="border rounded-lg p-4 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="mr-3 text-orange-500">⚽</span>
+                                    <div>
+                                        <h4 class="font-semibold">Jake's Soccer Game</h4>
+                                        <p class="text-sm text-gray-600">Jake • June 5, 2025</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" class="w-5 h-5">
+                            </div>
+                            <div class="border rounded-lg p-4 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="mr-3 text-blue-500">📞</span>
+                                    <div>
+                                        <h4 class="font-semibold">Check in with Emma</h4>
+                                        <p class="text-sm text-gray-600">Emma • June 2, 2025</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" class="w-5 h-5">
+                            </div>
+                            <div class="border rounded-lg p-4 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="mr-3 text-pink-500">🎂</span>
+                                    <div>
+                                        <h4 class="font-semibold">Sophie's Birthday Coming Up</h4>
+                                        <p class="text-sm text-gray-600">Sophie • June 12, 2025</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" class="w-5 h-5">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Reminder Settings</h3>
+                        <div class="space-y-4">
+                            <div class="border rounded-lg p-4">
+                                <h4 class="font-semibold mb-2">Connection Frequency</h4>
+                                <select class="w-full p-2 border rounded">
+                                    <option>Weekly check-ins</option>
+                                    <option>Bi-weekly check-ins</option>
+                                    <option>Monthly check-ins</option>
+                                </select>
+                            </div>
+                            <div class="border rounded-lg p-4">
+                                <h4 class="font-semibold mb-2">Notification Time</h4>
+                                <input type="time" class="w-full p-2 border rounded" value="09:00">
+                            </div>
+                            <div class="border rounded-lg p-4">
+                                <h4 class="font-semibold mb-2">Special Events</h4>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        Birthdays (1 week before)
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        School events
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-2">
+                                        Holidays
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Sample data
+        const conversationStarters = {
+            "5-8": [
+                "What was the best part of your day today?",
+                "Tell me about your favorite toy or game right now",
+                "What's your favorite animal and why?",
+                "What do you want to be when you grow up?",
+                "What's your favorite color and what things are that color?",
+                "Tell me about something new you learned today"
+            ],
+            "9-12": [
+                "What's your favorite subject in school and why?",
+                "Tell me about your best friend - what do you like to do together?",
+                "What's the coolest thing you've built or made recently?",
+                "If you could have any superpower, what would it be?",
+                "What's your favorite book or movie right now?",
+                "Tell me about something that made you proud this week"
+            ],
+            "12-15": [
+                "What's the most interesting thing you learned in school this week?",
+                "Tell me about your favorite game or hobby right now",
+                "What's something that made you laugh recently?",
+                "If you could travel anywhere, where would you go?",
+                "What's challenging you right now, and how are you handling it?",
+                "Tell me about a goal you're working toward"
+            ],
+            "16-18": [
+                "What are you most excited about these days?",
+                "Tell me about your friends - what do you all like to do together?",
+                "What's your favorite music right now? Can you share a song with me?",
+                "What are you thinking about for after high school?",
+                "What's something you're really passionate about?",
+                "Tell me about a recent accomplishment you're proud of"
+            ]
+        };
+
+        const activitySuggestions = {
+            "5-8": {
+                "Virtual": ["Simple video calls with show-and-tell", "Read books together over video", "Virtual zoo or aquarium tours", "Play simple online games"],
+                "Creative": ["Draw pictures for each other", "Make up silly songs together", "Create a scavenger hunt", "Build with blocks or Lego over video"],
+                "In-Person": ["Baking cookies", "Simple crafts with paper and crayons", "Playing in the park", "Reading favorite books together"]
+            },
+            "9-12": {
+                "Virtual": ["Play Minecraft or Roblox together", "Online puzzles and brain games", "Virtual museum tours", "Share and discuss photos"],
+                "Creative": ["Start a family recipe book", "Create comic strips together", "Write short stories", "Build model kits together"],
+                "In-Person": ["Cooking projects", "Board games and card games", "Nature photography walks", "Science experiments"]
+            },
+            "12-15": {
+                "Virtual": ["Online multiplayer games", "Watch movies simultaneously and text", "Virtual escape rooms", "Share music playlists"],
+                "Creative": ["Create a family podcast", "Digital scrapbooking", "Write letters to future selves", "Photography challenges"],
+                "In-Person": ["Cooking elaborate meals", "Strategic board games", "Hiking and outdoor adventures", "Learning new skills together"]
+            },
+            "16-18": {
+                "Virtual": ["Play competitive online games", "Virtual college tours together", "Online classes or tutorials", "Social media challenges"],
+                "Creative": ["Start a family blog", "Create video content", "Plan future trips together", "Collaborate on family history project"],
+                "In-Person": ["Advanced cooking classes", "Workout sessions", "Exploring new places", "Attending events together"]
+            }
+        };
+
+        // Navigation functions
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(`section-${sectionName}`).classList.add('active');
+            
+            // Update nav buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${sectionName}`).classList.add('active');
+        }
+
+        function updateConversationStarters() {
+            const age = document.getElementById('ageSelect').value;
+            const startersDiv = document.getElementById('conversationStarters');
+            const activitiesDiv = document.getElementById('activitySuggestions');
+            
+            // Update conversation starters
+            startersDiv.innerHTML = '';
+            conversationStarters[age].forEach(starter => {
+                const div = document.createElement('div');
+                div.className = 'bg-blue-50 p-4 rounded-lg';
+                div.innerHTML = `<p class="text-gray-800">${starter}</p>`;
+                startersDiv.appendChild(div);
+            });
+            
+            // Update activities
+            activitiesDiv.innerHTML = '';
+            Object.entries(activitySuggestions[age]).forEach(([category, activities]) => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.innerHTML = `
+                    <h4 class="font-semibold text-gray-700 mb-2">${category}</h4>
+                    <div class="space-y-2">
+                        ${activities.map(activity => 
+                            `<div class="bg-green-50 p-3 rounded flex items-center justify-between">
+                                <span>${activity}</span>
+                                <span class="text-yellow-500 cursor-pointer">⭐</span>
+                            </div>`
+                        ).join('')}
+                    </div>
+                `;
+                activitiesDiv.appendChild(categoryDiv);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('profiles');
+            updateConversationStarters();
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateInput').value = today;
+        });
+    </script>
+</body>
+</html>
