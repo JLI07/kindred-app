@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kindred - Connecting Generations</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
     <style>
         body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
         .nav-btn { transition: all 0.2s; }
@@ -35,6 +35,8 @@
             max-height: 80vh; 
             overflow-y: auto;
         }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
     </style>
 </head>
 <body>
@@ -66,7 +68,7 @@
                 </div>
                 
                 <!-- Login Form -->
-                <form id="loginForm" class="auth-form">
+                <div id="loginForm" class="auth-form active">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" id="loginEmail" class="w-full p-3 border rounded-lg" required>
@@ -75,13 +77,13 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                         <input type="password" id="loginPassword" class="w-full p-3 border rounded-lg" required>
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-medium">
+                    <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-medium">
                         Sign In
                     </button>
-                </form>
+                </div>
                 
                 <!-- Signup Form -->
-                <form id="signupForm" class="auth-form hidden">
+                <div id="signupForm" class="auth-form">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" id="signupEmail" class="w-full p-3 border rounded-lg" required>
@@ -94,12 +96,20 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
                         <input type="text" id="signupName" class="w-full p-3 border rounded-lg" required>
                     </div>
-                    <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-medium">
+                    <button onclick="handleSignup()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-medium">
                         Create Account
                     </button>
-                </form>
+                </div>
                 
                 <div id="authMessage" class="mt-4 text-center text-sm"></div>
+                
+                <!-- Demo Login Option -->
+                <div class="mt-6 pt-6 border-t">
+                    <p class="text-center text-sm text-gray-600 mb-3">Quick Demo Access:</p>
+                    <button onclick="enterDemoMode()" class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 font-medium">
+                        Try Demo (No Signup Required)
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -111,7 +121,7 @@
                     <button onclick="closeGrandchildModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
                 </div>
                 
-                <form id="grandchildForm">
+                <div id="grandchildForm">
                     <input type="hidden" id="grandchildId">
                     
                     <div class="mb-4">
@@ -151,14 +161,14 @@
                     </div>
                     
                     <div class="flex space-x-3">
-                        <button type="button" onclick="closeGrandchildModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400">
+                        <button onclick="closeGrandchildModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400">
                             Cancel
                         </button>
-                        <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+                        <button onclick="saveGrandchild()" class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
                             Save
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -170,7 +180,7 @@
                     <button onclick="closeJournalModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
                 </div>
                 
-                <form id="journalForm">
+                <div id="journalForm">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Grandchild</label>
                         <select id="journalGrandchild" class="w-full p-3 border rounded-lg" required>
@@ -194,14 +204,14 @@
                     </div>
                     
                     <div class="flex space-x-3">
-                        <button type="button" onclick="closeJournalModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400">
+                        <button onclick="closeJournalModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400">
                             Cancel
                         </button>
-                        <button type="submit" class="flex-1 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700">
+                        <button onclick="saveJournalEntry()" class="flex-1 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700">
                             Save Entry
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -212,16 +222,16 @@
                     <div class="flex items-center space-x-3">
                         <svg width="32" height="32" viewBox="0 0 100 100" class="w-8 h-8">
                             <defs>
-                                <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <linearGradient id="heartGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
                                     <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
                                 </linearGradient>
                             </defs>
-                            <circle cx="35" cy="25" r="12" fill="url(#heartGradient)" />
-                            <path d="M 20 35 Q 20 30 25 30 L 45 30 Q 50 30 50 35 L 50 65 Q 50 75 35 75 Q 20 75 20 65 Z" fill="url(#heartGradient)" />
+                            <circle cx="35" cy="25" r="12" fill="url(#heartGradient2)" />
+                            <path d="M 20 35 Q 20 30 25 30 L 45 30 Q 50 30 50 35 L 50 65 Q 50 75 35 75 Q 20 75 20 65 Z" fill="url(#heartGradient2)" />
                             <circle cx="58" cy="30" r="8" fill="#1e40af" />
                             <path d="M 48 38 Q 48 35 50 35 L 66 35 Q 68 35 68 38 L 68 60 Q 68 65 58 65 Q 48 65 48 60 Z" fill="#1e40af" />
-                            <path d="M 50 75 Q 35 60 25 45 Q 20 35 30 35 Q 40 35 50 50 Q 60 35 70 35 Q 80 35 75 45 Q 65 60 50 75 Z" fill="url(#heartGradient)" opacity="0.8" />
+                            <path d="M 50 75 Q 35 60 25 45 Q 20 35 30 35 Q 40 35 50 50 Q 60 35 70 35 Q 80 35 75 45 Q 65 60 50 75 Z" fill="url(#heartGradient2)" opacity="0.8" />
                         </svg>
                         <div>
                             <h1 class="text-2xl font-bold text-gray-800">Kindred</h1>
@@ -274,7 +284,7 @@
                     <!-- Profiles will be loaded here -->
                 </div>
                 
-                <div id="noProfiles" class="text-center py-16 hidden">
+                <div id="noProfiles" class="text-center py-16">
                     <div class="text-6xl mb-4">👴👵</div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">No grandchildren yet</h3>
                     <p class="text-gray-600 mb-6">Add your first grandchild to start connecting!</p>
@@ -335,7 +345,7 @@
                     <!-- Journal entries will be loaded here -->
                 </div>
                 
-                <div id="noJournal" class="text-center py-16 hidden">
+                <div id="noJournal" class="text-center py-16">
                     <div class="text-6xl mb-4">📖</div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">No journal entries yet</h3>
                     <p class="text-gray-600 mb-6">Start documenting your precious moments!</p>
@@ -358,16 +368,33 @@
     </div>
 
     <script>
-        // Supabase configuration
-        const SUPABASE_URL = 'https://cfrtpkgdgsylqnjeluqc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmcnRwa2dkZ3N5bHFuamVsdXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3MzQxODYsImV4cCI6MjA2NDMxMDE4Nn0.X4xU98fpKLrIOTXslrbx_vqpJ6am4dHf7uJbGm44jpg';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+        // Global variables
+        let supabase = null;
         let currentUser = null;
         let profiles = [];
         let journalEntries = [];
-        
+        let demoMode = false;
+
+        // Initialize Supabase
+        function initSupabase() {
+            try {
+                const SUPABASE_URL = 'https://cfrtpkgdgsylqnjeluqc.supabase.co';
+                const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmcnRwa2dkZ3N5bHFuamVsdXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3MzQxODYsImV4cCI6MjA2NDMxMDE4Nn0.X4xU98fpKLrIOTXslrbx_vqpJ6am4dHf7uJbGm44jpg';
+                
+                if (window.supabase && window.supabase.createClient) {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    console.log('Supabase initialized successfully');
+                    return true;
+                } else {
+                    console.error('Supabase library not loaded');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error initializing Supabase:', error);
+                return false;
+            }
+        }
+
         // Conversation starters and activities data
         const conversationStarters = {
             "5-8": [
@@ -375,62 +402,257 @@
                 "Tell me about your favorite toy or game right now",
                 "What's your favorite animal and why?",
                 "What do you want to be when you grow up?",
-                "What's your favorite color and what things are that color?",
-                "Tell me about something new you learned today"
+                "What's your favorite color and what things are that color?"
             ],
             "9-12": [
                 "What's your favorite subject in school and why?",
                 "Tell me about your best friend - what do you like to do together?",
                 "What's the coolest thing you've built or made recently?",
                 "If you could have any superpower, what would it be?",
-                "What's your favorite book or movie right now?",
-                "Tell me about something that made you proud this week"
+                "What's your favorite book or movie right now?"
             ],
             "12-15": [
                 "What's the most interesting thing you learned in school this week?",
                 "Tell me about your favorite game or hobby right now",
                 "What's something that made you laugh recently?",
                 "If you could travel anywhere, where would you go?",
-                "What's challenging you right now, and how are you handling it?",
-                "Tell me about a goal you're working toward"
+                "What's challenging you right now, and how are you handling it?"
             ],
             "16-18": [
                 "What are you most excited about these days?",
                 "Tell me about your friends - what do you all like to do together?",
                 "What's your favorite music right now? Can you share a song with me?",
                 "What are you thinking about for after high school?",
-                "What's something you're really passionate about?",
-                "Tell me about a recent accomplishment you're proud of"
+                "What's something you're really passionate about?"
             ]
         };
 
         const activitySuggestions = {
             "5-8": {
-                "Virtual": ["Simple video calls with show-and-tell", "Read books together over video", "Virtual zoo or aquarium tours", "Play simple online games"],
-                "Creative": ["Draw pictures for each other", "Make up silly songs together", "Create a scavenger hunt", "Build with blocks or Lego over video"],
-                "In-Person": ["Baking cookies", "Simple crafts with paper and crayons", "Playing in the park", "Reading favorite books together"]
+                "Virtual": ["Simple video calls with show-and-tell", "Read books together over video", "Virtual zoo tours"],
+                "Creative": ["Draw pictures for each other", "Make up silly songs together", "Create a scavenger hunt"],
+                "In-Person": ["Baking cookies", "Simple crafts", "Playing in the park"]
             },
             "9-12": {
-                "Virtual": ["Play Minecraft or Roblox together", "Online puzzles and brain games", "Virtual museum tours", "Share and discuss photos"],
-                "Creative": ["Start a family recipe book", "Create comic strips together", "Write short stories", "Build model kits together"],
-                "In-Person": ["Cooking projects", "Board games and card games", "Nature photography walks", "Science experiments"]
+                "Virtual": ["Play Minecraft together", "Online puzzles", "Virtual museum tours"],
+                "Creative": ["Start a family recipe book", "Create comic strips", "Build model kits"],
+                "In-Person": ["Cooking projects", "Board games", "Nature photography"]
             },
             "12-15": {
-                "Virtual": ["Online multiplayer games", "Watch movies simultaneously and text", "Virtual escape rooms", "Share music playlists"],
-                "Creative": ["Create a family podcast", "Digital scrapbooking", "Write letters to future selves", "Photography challenges"],
-                "In-Person": ["Cooking elaborate meals", "Strategic board games", "Hiking and outdoor adventures", "Learning new skills together"]
+                "Virtual": ["Online multiplayer games", "Watch movies together", "Virtual escape rooms"],
+                "Creative": ["Create a family podcast", "Digital scrapbooking", "Photography challenges"],
+                "In-Person": ["Cooking elaborate meals", "Strategic board games", "Hiking adventures"]
             },
             "16-18": {
-                "Virtual": ["Play competitive online games", "Virtual college tours together", "Online classes or tutorials", "Social media challenges"],
-                "Creative": ["Start a family blog", "Create video content", "Plan future trips together", "Collaborate on family history project"],
-                "In-Person": ["Advanced cooking classes", "Workout sessions", "Exploring new places", "Attending events together"]
+                "Virtual": ["Play competitive games", "Virtual college tours", "Online classes together"],
+                "Creative": ["Start a family blog", "Create video content", "Plan future trips"],
+                "In-Person": ["Advanced cooking classes", "Workout sessions", "Exploring new places"]
             }
         };
 
         // Initialize app
-        async function signOut() {
+        function initApp() {
+            console.log('Initializing app...');
+            const supabaseInitialized = initSupabase();
+            
+            if (supabaseInitialized && supabase) {
+                checkAuthSession();
+            } else {
+                console.log('Supabase not available, showing auth modal');
+                showAuthModal();
+            }
+            
+            updateConversationStarters();
+        }
+
+        async function checkAuthSession() {
             try {
-                await supabase.auth.signOut();
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    currentUser = session.user;
+                    hideAuthModal();
+                    await loadUserData();
+                } else {
+                    showAuthModal();
+                }
+            } catch (error) {
+                console.error('Error checking auth session:', error);
+                showAuthModal();
+            }
+        }
+
+        // Auth functions
+        function showAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+
+        function hideAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function showAuthTab(tab) {
+            const loginTab = document.getElementById('loginTab');
+            const signupTab = document.getElementById('signupTab');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            if (tab === 'login') {
+                loginTab.classList.add('bg-white', 'shadow-sm');
+                loginTab.classList.remove('text-gray-600');
+                signupTab.classList.remove('bg-white', 'shadow-sm');
+                signupTab.classList.add('text-gray-600');
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                signupTab.classList.add('bg-white', 'shadow-sm');
+                signupTab.classList.remove('text-gray-600');
+                loginTab.classList.remove('bg-white', 'shadow-sm');
+                loginTab.classList.add('text-gray-600');
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+        }
+
+        // Auth handlers
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showAuthMessage('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (!supabase) {
+                showAuthMessage('Database connection not available. Try demo mode.', 'error');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+                
+                if (error) {
+                    showAuthMessage(error.message, 'error');
+                } else {
+                    currentUser = data.user;
+                    hideAuthModal();
+                    await loadUserData();
+                }
+            } catch (error) {
+                showAuthMessage('An error occurred during sign in', 'error');
+            }
+        }
+
+        async function handleSignup() {
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const name = document.getElementById('signupName').value;
+            
+            if (!email || !password || !name) {
+                showAuthMessage('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAuthMessage('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (!supabase) {
+                showAuthMessage('Database connection not available. Try demo mode.', 'error');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name,
+                        }
+                    }
+                });
+                
+                if (error) {
+                    showAuthMessage(error.message, 'error');
+                } else {
+                    showAuthMessage('Account created! Please check your email to verify your account.', 'success');
+                }
+            } catch (error) {
+                showAuthMessage('An error occurred during sign up', 'error');
+            }
+        }
+
+        function enterDemoMode() {
+            demoMode = true;
+            currentUser = { id: 'demo-user', email: 'demo@kindred.app' };
+            
+            // Load demo data
+            profiles = [
+                {
+                    id: 'demo1',
+                    name: 'Emma',
+                    age: 16,
+                    school: 'Lincoln High School',
+                    interests: ['Photography', 'Basketball', 'Music'],
+                    platforms: ['Instagram', 'Snapchat', 'TikTok'],
+                    birthday: '2008-03-15',
+                    notes: 'Loves indie music, plays on school basketball team',
+                    last_contact: '2025-05-28'
+                },
+                {
+                    id: 'demo2',
+                    name: 'Jake',
+                    age: 12,
+                    school: 'Roosevelt Middle School',
+                    interests: ['Gaming', 'Soccer', 'Drawing'],
+                    platforms: ['Discord', 'YouTube', 'Instagram'],
+                    birthday: '2012-07-22',
+                    notes: 'Minecraft enthusiast, plays midfielder on soccer team',
+                    last_contact: '2025-05-30'
+                }
+            ];
+            
+            journalEntries = [
+                {
+                    id: 'journal1',
+                    grandchild_id: 'demo1',
+                    title: 'Chat about Photography',
+                    content: 'Emma showed me her latest photos from the school art show. She\'s really improving!',
+                    entry_date: '2025-05-28',
+                    profiles: { name: 'Emma' }
+                }
+            ];
+            
+            hideAuthModal();
+            updateUI();
+        }
+
+        function showAuthMessage(message, type) {
+            const messageEl = document.getElementById('authMessage');
+            messageEl.textContent = message;
+            messageEl.className = `mt-4 text-center text-sm ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
+        }
+
+        async function signOut() {
+            if (demoMode) {
+                demoMode = false;
+                currentUser = null;
+                profiles = [];
+                journalEntries = [];
+                showAuthModal();
+                return;
+            }
+
+            try {
+                if (supabase) {
+                    await supabase.auth.signOut();
+                }
                 currentUser = null;
                 profiles = [];
                 journalEntries = [];
@@ -442,12 +664,19 @@
 
         // Data loading functions
         async function loadUserData() {
+            if (demoMode) {
+                updateUI();
+                return;
+            }
+
             await loadProfiles();
             await loadJournalEntries();
             updateUI();
         }
 
         async function loadProfiles() {
+            if (demoMode || !supabase) return;
+
             try {
                 const { data, error } = await supabase
                     .from('profiles')
@@ -467,6 +696,8 @@
         }
 
         async function loadJournalEntries() {
+            if (demoMode || !supabase) return;
+
             try {
                 const { data, error } = await supabase
                     .from('journal_entries')
@@ -489,7 +720,6 @@
         function updateUI() {
             renderProfiles();
             renderJournalEntries();
-            updateConversationStarters();
         }
 
         function renderProfiles() {
@@ -498,9 +728,9 @@
             
             if (profiles.length === 0) {
                 container.innerHTML = '';
-                noProfiles.classList.remove('hidden');
+                noProfiles.style.display = 'block';
             } else {
-                noProfiles.classList.add('hidden');
+                noProfiles.style.display = 'none';
                 container.innerHTML = profiles.map(profile => createProfileCard(profile)).join('');
             }
         }
@@ -550,9 +780,9 @@
             
             if (journalEntries.length === 0) {
                 container.innerHTML = '';
-                noJournal.classList.remove('hidden');
+                noJournal.style.display = 'block';
             } else {
-                noJournal.classList.add('hidden');
+                noJournal.style.display = 'none';
                 container.innerHTML = journalEntries.map(entry => createJournalCard(entry)).join('');
             }
         }
@@ -584,7 +814,6 @@
         function openGrandchildModal(profileId = null) {
             const modal = document.getElementById('grandchildModal');
             const title = document.getElementById('modalTitle');
-            const form = document.getElementById('grandchildForm');
             
             if (profileId) {
                 const profile = profiles.find(p => p.id === profileId);
@@ -601,8 +830,14 @@
                 }
             } else {
                 title.textContent = 'Add Grandchild';
-                form.reset();
                 document.getElementById('grandchildId').value = '';
+                document.getElementById('grandchildName').value = '';
+                document.getElementById('grandchildAge').value = '';
+                document.getElementById('grandchildBirthday').value = '';
+                document.getElementById('grandchildSchool').value = '';
+                document.getElementById('grandchildInterests').value = '';
+                document.getElementById('grandchildPlatforms').value = '';
+                document.getElementById('grandchildNotes').value = '';
             }
             
             modal.classList.add('active');
@@ -630,16 +865,15 @@
 
         function closeJournalModal() {
             document.getElementById('journalModal').classList.remove('active');
-            document.getElementById('journalForm').reset();
+            document.getElementById('journalGrandchild').value = '';
+            document.getElementById('journalTitle').value = '';
+            document.getElementById('journalContent').value = '';
         }
 
-        // Form handlers
-        document.getElementById('grandchildForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
+        // Save functions
+        async function saveGrandchild() {
             const profileId = document.getElementById('grandchildId').value;
             const profileData = {
-                user_id: currentUser.id,
                 name: document.getElementById('grandchildName').value,
                 age: parseInt(document.getElementById('grandchildAge').value) || null,
                 birthday: document.getElementById('grandchildBirthday').value || null,
@@ -649,8 +883,36 @@
                 notes: document.getElementById('grandchildNotes').value || null,
                 last_contact: new Date().toISOString()
             };
-            
+
+            if (!profileData.name) {
+                alert('Please enter a name');
+                return;
+            }
+
+            if (demoMode) {
+                // Demo mode - just update local data
+                if (profileId) {
+                    const index = profiles.findIndex(p => p.id === profileId);
+                    if (index !== -1) {
+                        profiles[index] = { ...profiles[index], ...profileData };
+                    }
+                } else {
+                    profileData.id = 'demo' + Date.now();
+                    profiles.push(profileData);
+                }
+                closeGrandchildModal();
+                renderProfiles();
+                return;
+            }
+
+            if (!supabase) {
+                alert('Database not available. Try demo mode.');
+                return;
+            }
+
             try {
+                profileData.user_id = currentUser.id;
+                
                 let result;
                 if (profileId) {
                     // Update existing profile
@@ -676,20 +938,40 @@
             } catch (error) {
                 alert('Error saving profile: ' + error.message);
             }
-        });
+        }
 
-        document.getElementById('journalForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
+        async function saveJournalEntry() {
             const journalData = {
-                user_id: currentUser.id,
                 grandchild_id: document.getElementById('journalGrandchild').value,
                 title: document.getElementById('journalTitle').value,
                 content: document.getElementById('journalContent').value,
                 entry_date: document.getElementById('journalDate').value
             };
-            
+
+            if (!journalData.grandchild_id || !journalData.title || !journalData.content) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            if (demoMode) {
+                // Demo mode - just update local data
+                const grandchild = profiles.find(p => p.id === journalData.grandchild_id);
+                journalData.id = 'journal' + Date.now();
+                journalData.profiles = { name: grandchild?.name || 'Unknown' };
+                journalEntries.unshift(journalData);
+                closeJournalModal();
+                renderJournalEntries();
+                return;
+            }
+
+            if (!supabase) {
+                alert('Database not available. Try demo mode.');
+                return;
+            }
+
             try {
+                journalData.user_id = currentUser.id;
+                
                 const { error } = await supabase
                     .from('journal_entries')
                     .insert([journalData]);
@@ -704,15 +986,23 @@
             } catch (error) {
                 alert('Error saving journal entry: ' + error.message);
             }
-        });
+        }
 
         // Delete functions
-        async function editProfile(profileId) {
+        function editProfile(profileId) {
             openGrandchildModal(profileId);
         }
 
         async function deleteProfile(profileId) {
             if (confirm('Are you sure you want to delete this grandchild profile?')) {
+                if (demoMode) {
+                    profiles = profiles.filter(p => p.id !== profileId);
+                    renderProfiles();
+                    return;
+                }
+
+                if (!supabase) return;
+
                 try {
                     const { error } = await supabase
                         .from('profiles')
@@ -734,6 +1024,14 @@
 
         async function deleteJournalEntry(entryId) {
             if (confirm('Are you sure you want to delete this journal entry?')) {
+                if (demoMode) {
+                    journalEntries = journalEntries.filter(e => e.id !== entryId);
+                    renderJournalEntries();
+                    return;
+                }
+
+                if (!supabase) return;
+
                 try {
                     const { error } = await supabase
                         .from('journal_entries')
@@ -804,116 +1102,10 @@
 
         // Initialize the app when the page loads
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing app...');
             initApp();
             showSection('profiles');
-            updateConversationStarters();
         });
     </script>
 </body>
-</html> function initApp() {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                
-                if (session) {
-                    currentUser = session.user;
-                    hideAuthModal();
-                    await loadUserData();
-                } else {
-                    showAuthModal();
-                }
-            } catch (error) {
-                console.error('Error initializing app:', error);
-                showAuthModal();
-            }
-        }
-
-        // Auth functions
-        function showAuthModal() {
-            document.getElementById('authModal').classList.add('active');
-        }
-
-        function hideAuthModal() {
-            document.getElementById('authModal').classList.remove('active');
-        }
-
-        function showAuthTab(tab) {
-            const loginTab = document.getElementById('loginTab');
-            const signupTab = document.getElementById('signupTab');
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            
-            if (tab === 'login') {
-                loginTab.classList.add('bg-white', 'shadow-sm');
-                loginTab.classList.remove('text-gray-600');
-                signupTab.classList.remove('bg-white', 'shadow-sm');
-                signupTab.classList.add('text-gray-600');
-                loginForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-            } else {
-                signupTab.classList.add('bg-white', 'shadow-sm');
-                signupTab.classList.remove('text-gray-600');
-                loginTab.classList.remove('bg-white', 'shadow-sm');
-                loginTab.classList.add('text-gray-600');
-                signupForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-            }
-        }
-
-        // Auth form handlers
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-                
-                if (error) {
-                    showAuthMessage(error.message, 'error');
-                } else {
-                    currentUser = data.user;
-                    hideAuthModal();
-                    await loadUserData();
-                }
-            } catch (error) {
-                showAuthMessage('An error occurred during sign in', 'error');
-            }
-        });
-
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const name = document.getElementById('signupName').value;
-            
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: name,
-                        }
-                    }
-                });
-                
-                if (error) {
-                    showAuthMessage(error.message, 'error');
-                } else {
-                    showAuthMessage('Account created! Please check your email to verify your account.', 'success');
-                }
-            } catch (error) {
-                showAuthMessage('An error occurred during sign up', 'error');
-            }
-        });
-
-        function showAuthMessage(message, type) {
-            const messageEl = document.getElementById('authMessage');
-            messageEl.textContent = message;
-            messageEl.className = `mt-4 text-center text-sm ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
-        }
-
-        async
+</html>
